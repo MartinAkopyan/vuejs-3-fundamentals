@@ -21,10 +21,7 @@
 				<input type="checkbox" v-model="newItemHighPriority">
 				High priority
 			</label>
-			<button
-				:disabled="newItem.length < 5" 
-				@click="saveItem"
-				class="btn btn-primary">
+			<button :disabled="newItem.length < 5" @click="saveItem" class="btn btn-primary">
 				Save Item
 			</button>
 		</div>
@@ -33,7 +30,12 @@
 		<p v-if="items.length === 0">Nice job, you bought all items.</p>
 
 		<ul>
-			<li v-for="item in items" :key="item.id">{{item.label}}</li>
+			<li 
+			v-for="item in items" 
+			:key="item.id" 
+			:class='{strikeout: item.purchased, priority: item.highPriority}'
+			@click="togglePurchase(item)"
+			class="static-class">{{item.label}}</li>
 		</ul>
 	</div>
 
@@ -45,26 +47,35 @@
 			data() {
 				return {
 					header: 'Shopping List App!',
-					editing: false, 
+					editing: false,
 					newItemHighPriority: false,
 					newItem: '',
 					items: [
-						// { id: 1, label: "10 hats" },
-						// { id: 2, label: "2 pairs crocks" },
-						// { id: 3, label: "20 cups" },
+						{ id: 1, label: "10 hats", purchased: true, highPriority: false },
+						{ id: 2, label: "2 pairs crocks", purchased: false, highPriority: true },
+						{ id: 3, label: "20 cups", purchased: true, highPriority: true },
 					]
 				}
 			},
 			methods: {
 				saveItem() {
-					this.items.push({id:this.items.length + 1, label: this.newItem })
+					this.items.push({ 
+						id: this.items.length + 1, 
+						label: this.newItem ,
+						highPriority: this.newItemHighPriority,
+					})
 					this.newItem = '';
+					this.newItemHighPriority = '';
 				},
 				doEditing(editing) {
 					this.editing = editing;
 					this.newItem = '';
-				}
-			} 
+					this.newItemHighPriority = '';
+				},
+				togglePurchase(item) {
+					item.purchased = !item.purchased;
+				},
+			}
 		}).mount('#shopping-list')
 	</script>
 </body>
