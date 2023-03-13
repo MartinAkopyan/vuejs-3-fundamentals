@@ -31,7 +31,7 @@
 
 		<ul>
 			<li 
-			v-for="item in items" 
+			v-for="item in reversedItems" 
 			:key="item.id" 
 			:class='{strikeout: item.purchased, priority: item.highPriority}'
 			@click="togglePurchase(item)"
@@ -57,6 +57,13 @@
 					]
 				}
 			},
+
+			computed: {
+				reversedItems() {
+					return [...this.items].reverse();
+				}
+			},
+
 			methods: {
 				saveItem() {
 					this.items.push({ 
